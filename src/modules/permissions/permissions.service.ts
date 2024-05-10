@@ -62,22 +62,29 @@ export class PermissionsService {
     // 查询用户信息
     const user_info = await this.userRepo.findOne({
       where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
-      select: ['password'],
+      select: ['password', 'user_id', 'role', 'email'],
+      relations: ['role'],
     });
 
     if (!user_info) {
       throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 404);
     }
-
+    console.log(user_info);
     // 验证密码是否正确
     const isPasswordValid = compareSync(attemptedPassword, user_info?.password);
 
     if (isPasswordValid) {
-      // 登录成功，返回token
-      return this.generateToken({
-        user_id: user_info?.user_id,
-        email: user_info?.email,
+      // 登录成功
+      const token = this.generateToken({
+        user_id: user_info.user_id,
+        email: user_info.email,
       });
+
+      return {
+        token,
+        user_id: user_info.user_id,
+        permissions: user_info.role.permissions,
+      };
     } else {
       throw new HttpException('用户名或密码错误，请检查后重试！', 401);
     }
