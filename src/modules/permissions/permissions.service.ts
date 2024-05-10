@@ -25,11 +25,9 @@ export class PermissionsService {
 
   // 注册
   async register({ username, email, password }: RegisterDto) {
-    // 查询该用户名是否已经注册
+    // 查询该 用户名或邮箱 是否已经注册
     const isExist = await this.userRepo.exists({
-      where: {
-        username,
-      },
+      where: [{ username }, { email }],
     });
     if (isExist)
       throw new HttpException('该用户已被注册！', HttpStatus.CONFLICT);
