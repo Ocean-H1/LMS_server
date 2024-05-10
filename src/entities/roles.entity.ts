@@ -9,8 +9,8 @@ export class Role {
   @Column()
   role_name: string;
 
-  @Column('json')
-  permissions: any; // 使用JSON字段存储权限详情
+  @Column('text')
+  permissions: string;
 
   @OneToMany(() => User, (user) => user.role)
   users: User[];
