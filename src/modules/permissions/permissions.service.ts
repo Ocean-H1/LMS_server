@@ -5,7 +5,7 @@ import { Role } from '@entities/roles.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
-import { hashSync } from 'bcryptjs';
+import { hashSync, compareSync } from 'bcryptjs';
 import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class PermissionsService {
   ) {}
 
   // 生成token
-  generateToken({ user_id, email }: User) {
+  generateToken({ user_id, email }: Partial<User>) {
     return {
       token: this.jwt.sign({ email, sub: user_id }),
     };
@@ -29,8 +29,9 @@ export class PermissionsService {
     const isExist = await this.userRepo.exists({
       where: [{ username }, { email }],
     });
-    if (isExist)
+    if (isExist) {
       throw new HttpException('该用户已被注册！', HttpStatus.CONFLICT);
+    }
 
     // 加密
     const saltRounds = 10;
@@ -57,12 +58,28 @@ export class PermissionsService {
   }
 
   // 登录
-  async login({ username, password }: LoginDto, session) {
+  async login({ usernameOrEmail, attemptedPassword }: LoginDto) {
     // 查询用户信息
     const user_info = await this.userRepo.findOne({
-      where: {
-        username,
-      },
+      where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+      select: ['password'],
     });
+
+    if (!user_info) {
+      throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 404);
+    }
+
+    // 验证密码是否正确
+    const isPasswordValid = compareSync(attemptedPassword, user_info?.password);
+
+    if (isPasswordValid) {
+      // 登录成功，返回token
+      return this.generateToken({
+        user_id: user_info?.user_id,
+        email: user_info?.email,
+      });
+    } else {
+      throw new HttpException('用户名或密码错误，请检查后重试！', 401);
+    }
   }
 }
