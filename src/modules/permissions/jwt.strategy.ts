@@ -26,10 +26,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate({ sub: user_id }) {
     // 这里返回的用户信息会被添加自动到请求对象的user属性中
-    return await this.userRepo.findOne({
+    const userInfo = await this.userRepo.findOne({
       where: {
         user_id,
       },
+      relations: ['role'],
     });
+    return userInfo;
   }
 }

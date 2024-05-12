@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -17,5 +18,12 @@ export class PermissionsController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return await this.permissionsService.register(registerDto);
+  }
+
+  // 获取用户信息
+  @Get('getUserInfo')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserInfo(@Req() req) {
+    return await this.permissionsService.getUserInfo(req);
   }
 }

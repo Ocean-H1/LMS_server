@@ -19,7 +19,7 @@ export class TransformInterceptors implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         return {
-          code: 10000,
+          code: 200,
           data,
           message: 'success',
         };

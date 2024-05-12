@@ -11,7 +11,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // 开启Cors
-  app.enableCors({ origin: 'http://localhost:8080', credentials: true });
+  app.enableCors({ origin: 'http://localhost:5173', credentials: true });
   // 全局注册拦截器
   app.useGlobalInterceptors(new TransformInterceptors());
   // 全局注册错误过滤器

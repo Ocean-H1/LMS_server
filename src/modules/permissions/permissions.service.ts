@@ -18,9 +18,7 @@ export class PermissionsService {
 
   // 生成token
   generateToken({ user_id, email }: Partial<User>) {
-    return {
-      token: this.jwt.sign({ email, sub: user_id }),
-    };
+    return this.jwt.sign({ email, sub: user_id });
   }
 
   // 注册
@@ -62,14 +60,13 @@ export class PermissionsService {
     // 查询用户信息
     const user_info = await this.userRepo.findOne({
       where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
-      select: ['password', 'user_id', 'role', 'email'],
+      select: ['password', 'user_id', 'email', 'username'],
       relations: ['role'],
     });
 
     if (!user_info) {
-      throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 404);
+      throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 200);
     }
-    console.log(user_info);
     // 验证密码是否正确
     const isPasswordValid = compareSync(attemptedPassword, user_info?.password);
 
@@ -82,11 +79,22 @@ export class PermissionsService {
 
       return {
         token,
-        user_id: user_info.user_id,
-        permissions: user_info.role.permissions,
       };
     } else {
-      throw new HttpException('用户名或密码错误，请检查后重试！', 401);
+      throw new HttpException('用户名或密码错误，请检查后重试！', 200);
     }
+  }
+
+  // 用户信息
+  async getUserInfo(req) {
+    const { user } = req;
+    return {
+      user_id: user.user_id,
+      username: user.username,
+      // 头像暂时写死
+      avatar: '',
+      permissions: user.role.permissions,
+      email: user.email,
+    };
   }
 }
