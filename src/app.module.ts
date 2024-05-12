@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // 模块
 import { PermissionsModule } from './modules/permissions/permissions.module';
-import { AccountModule } from './account/account.module';
 import { AccountModule } from './modules/account/account.module';
 
 @Module({

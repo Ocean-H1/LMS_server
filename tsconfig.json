@@ -19,6 +19,9 @@
       ],
       "@modules/*": [
         "src/modules/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
       ]
     },
     "incremental": true,
