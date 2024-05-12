@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // 模块
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { AccountModule } from './modules/account/account.module';
+import { LogModule } from './modules/log/log.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AccountModule } from './modules/account/account.module';
     }),
     PermissionsModule,
     AccountModule,
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
