@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { AccountModule } from './modules/account/account.module';
 import { LogModule } from './modules/log/log.module';
+import { RoleModule } from './modules/role/role.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { LogModule } from './modules/log/log.module';
     PermissionsModule,
     AccountModule,
     LogModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

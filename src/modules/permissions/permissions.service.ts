@@ -59,13 +59,16 @@ export class PermissionsService {
   async login({ usernameOrEmail, attemptedPassword }: LoginDto) {
     // 查询用户信息
     const user_info = await this.userRepo.findOne({
-      where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+      where: [
+        { username: usernameOrEmail, is_deleted: 0 },
+        { email: usernameOrEmail, is_deleted: 0 },
+      ],
       select: ['password', 'user_id', 'email', 'username'],
       relations: ['role'],
     });
 
-    if (!user_info) {
-      throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 200);
+    if (!user_info?.username) {
+      throw new HttpException('该用户不存在，请检查用户名或邮箱后重试！', 402);
     }
     // 验证密码是否正确
     const isPasswordValid = compareSync(attemptedPassword, user_info?.password);
@@ -81,7 +84,7 @@ export class PermissionsService {
         token,
       };
     } else {
-      throw new HttpException('用户名或密码错误，请检查后重试！', 200);
+      throw new HttpException('用户名或密码错误，请检查后重试！', 402);
     }
   }
 
