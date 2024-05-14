@@ -11,6 +11,8 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
 import { AccountModule } from './modules/account/account.module';
 import { LogModule } from './modules/log/log.module';
 import { RoleModule } from './modules/role/role.module';
+import { LabModule } from './modules/lab/lab.module';
+import { ReserveModule } from './modules/reserve/reserve.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { RoleModule } from './modules/role/role.module';
     AccountModule,
     LogModule,
     RoleModule,
+    LabModule,
+    ReserveModule,
   ],
   controllers: [AppController],
   providers: [AppService],

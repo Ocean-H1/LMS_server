@@ -14,7 +14,7 @@ import { AccountService } from './account.service';
 import {
   createAccountDto,
   editAccountDto,
-  GetAccountListDto,
+  GetListDto,
   DeleteAccountDto,
 } from './dto/account-crud.dto';
 
@@ -25,7 +25,7 @@ export class AccountController {
   // 获取账号列表
   @Get('getAccountList')
   @UseGuards(AuthGuard('jwt'))
-  async getAccountList(@Query() params: GetAccountListDto) {
+  async getAccountList(@Query() params: GetListDto) {
     return await this.accountService.getAccountList(params);
   }
 

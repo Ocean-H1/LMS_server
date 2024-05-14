@@ -33,7 +33,7 @@ export class editAccountDto extends createAccountDto {
   userId: number;
 }
 
-export class GetAccountListDto {
+export class GetListDto {
   @IsInt()
   @IsOptional()
   @Transform(({ value }) => Number(value))

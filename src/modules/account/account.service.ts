@@ -6,7 +6,7 @@ import { encryptPwd, resultError, resultSuccess } from '@/utils';
 import {
   createAccountDto,
   editAccountDto,
-  GetAccountListDto,
+  GetListDto,
   DeleteAccountDto,
 } from './dto/account-crud.dto';
 import { hashSync } from 'bcryptjs';
@@ -19,7 +19,7 @@ export class AccountService {
     @InjectRepository(Role) private readonly roleRepo: Repository<Role>,
   ) {}
 
-  async getAccountList(params: GetAccountListDto) {
+  async getAccountList(params: GetListDto) {
     const { page, pageSize } = params;
     const skip = (page - 1) * pageSize;
 
